@@ -1,0 +1,33 @@
+{
+  "name": "taiwan-ebook-search-mcp",
+  "version": "0.1.0",
+  "description": "MCP Server for searching and comparing ebook prices across Taiwan bookstores",
+  "type": "module",
+  "bin": {
+    "taiwan-ebook-search-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "dev": "tsc -w"
+  },
+  "keywords": [
+    "mcp",
+    "ebook",
+    "taiwan",
+    "bookstore",
+    "model-context-protocol"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "typescript": "^6.0.2"
+  }
+}
