@@ -6,6 +6,7 @@
 -->
 
 透過 Claude Desktop，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器。
+
 MCP Server for searching and comparing ebook prices across Taiwan bookstores.
 
 <img width="800px" alt="Preview Image" src="https://github.com/user-attachments/assets/6a2ec289-e5cd-4203-8d36-eec04f1c0f3f" />
