@@ -1,4 +1,4 @@
-# taiwan-ebook-search-mcp
+# TaiwanEbookSearch MCP
 
 <!-- TODO: 可以加上 npm version / license badge，例如：
 [![npm version](https://img.shields.io/npm/v/taiwan-ebook-search-mcp)](https://www.npmjs.com/package/taiwan-ebook-search-mcp)
@@ -6,6 +6,8 @@
 -->
 
 MCP Server for searching and comparing ebook prices across Taiwan bookstores.
+
+<img width="800px" alt="Preview Image" src="https://github.com/user-attachments/assets/6a2ec289-e5cd-4203-8d36-eec04f1c0f3f" />
 
 <!-- TODO: 補充一兩句說明這個工具的使用情境，例如：
 「透過 Claude Desktop，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器。」
