@@ -14,6 +14,9 @@
     "format-check": "prettier --check \"src/**/*.{js,ts,md,json,yml,yaml}\"",
     "test": "vitest run"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "mcp",
     "ebook",
@@ -21,6 +24,12 @@
     "bookstore",
     "model-context-protocol"
   ],
+  "author": "YOUR_NAME",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/TaiwanEbookSearch-MCP"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/TaiwanEbookSearch-MCP#readme",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
