@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 -->
 
-透過 Claude Desktop，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器
+讓 AI 透過這個 MCP Server，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器
 
 MCP Server for searching and comparing ebook prices across Taiwan bookstores.
 
