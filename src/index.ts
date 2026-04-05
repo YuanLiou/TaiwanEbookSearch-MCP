@@ -10,6 +10,8 @@ const API_VERSION = "v1";
 const SERVER_VERSION = "0.1.0";
 const USER_AGENT = `TW-EBook-MCP-${SERVER_VERSION}`;
 const REQUEST_TIMEOUT_MS = 15000;
+const DEFAULT_MAX_RESULTS_PER_BOOKSTORE = 3;
+const ABOUT_MAX_LENGTH = 80;
 const ALLOW_UNSAFE_API_BASE_URL =
   process.env.ALLOW_UNSAFE_API_BASE_URL === "true";
 
@@ -95,6 +97,45 @@ async function fetchJson(
   }
 }
 
+function truncateText(text: string | undefined, maxLength: number): string {
+  if (!text) return "";
+  const cleaned = text.replace(/\n/g, " ").trim();
+  if (cleaned.length <= maxLength) return cleaned;
+  return cleaned.slice(0, maxLength) + "…";
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function transformSearchResponse(data: any, maxPerBookstore: number): any {
+  return {
+    keywords: data.keywords,
+    totalQuantity: data.totalQuantity,
+    id: data.id,
+    results: (data.results ?? []).map((r: any) => {
+      const books = (r.books ?? []).slice(0, maxPerBookstore).map((b: any) => ({
+        title: b.title?.trim(),
+        price: b.price,
+        priceCurrency: b.priceCurrency,
+        link: b.link,
+        authors: b.authors,
+        publishDate: b.publishDate,
+        about: truncateText(b.about, ABOUT_MAX_LENGTH),
+      }));
+
+      const result: any = {
+        bookstore: r.bookstore?.displayName,
+        quantity: r.quantity,
+        books,
+      };
+
+      if (r.quantity > maxPerBookstore) {
+        result.booksShown = maxPerBookstore;
+      }
+
+      return result;
+    }),
+  };
+}
+
 // Tool: list_bookstores
 server.registerTool(
   "list_bookstores",
@@ -149,9 +190,17 @@ server.registerTool(
         .describe(
           "Optional list of bookstore IDs to search. If omitted, searches all online bookstores.",
         ),
+      maxResultsPerBookstore: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe(
+          `Max books to return per bookstore (default: ${DEFAULT_MAX_RESULTS_PER_BOOKSTORE}). Use a smaller value for faster responses with less detail.`,
+        ),
     }),
   },
-  async ({ keywords, bookstores }) => {
+  async ({ keywords, bookstores, maxResultsPerBookstore }) => {
     try {
       const params = new URLSearchParams();
       params.set("q", keywords);
@@ -182,8 +231,11 @@ server.registerTool(
         };
       }
 
+      const maxPer =
+        maxResultsPerBookstore ?? DEFAULT_MAX_RESULTS_PER_BOOKSTORE;
+      const transformed = transformSearchResponse(result.data, maxPer);
       return {
-        content: [{ type: "text", text: JSON.stringify(result.data, null, 2) }],
+        content: [{ type: "text", text: JSON.stringify(transformed, null, 2) }],
       };
     } catch (error) {
       logError("Failed to search ebooks", error);
@@ -220,8 +272,12 @@ server.registerTool(
         };
       }
 
+      const transformed = transformSearchResponse(
+        result.data,
+        DEFAULT_MAX_RESULTS_PER_BOOKSTORE,
+      );
       return {
-        content: [{ type: "text", text: JSON.stringify(result.data, null, 2) }],
+        content: [{ type: "text", text: JSON.stringify(transformed, null, 2) }],
       };
     } catch (error) {
       logError("Failed to get search result", error);
