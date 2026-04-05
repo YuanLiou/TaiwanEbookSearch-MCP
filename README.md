@@ -5,13 +5,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 -->
 
+透過 Claude Desktop，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器。
 MCP Server for searching and comparing ebook prices across Taiwan bookstores.
 
 <img width="800px" alt="Preview Image" src="https://github.com/user-attachments/assets/6a2ec289-e5cd-4203-8d36-eec04f1c0f3f" />
-
-<!-- TODO: 補充一兩句說明這個工具的使用情境，例如：
-「透過 Claude Desktop，直接用自然語言查詢各大台灣電子書平台的書籍價格，免開瀏覽器。」
--->
 
 ## Features
 
@@ -86,7 +83,7 @@ npm run build
 npm test
 ```
 
-本地連接測試：
+本機測試方式：
 
 ```bash
 npx @modelcontextprotocol/inspector node ./dist/index.js
