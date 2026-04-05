@@ -38,7 +38,7 @@ Edit Claude Desktop configuration file
   "mcpServers": {
     "taiwan-ebook-search": {
       "command": "npx",
-      "args": ["-y", "@louis383/tw-ebook-search-mcp"]
+      "args": ["-y", "@louis383/tw-book-search-mcp"]
     }
   }
 }

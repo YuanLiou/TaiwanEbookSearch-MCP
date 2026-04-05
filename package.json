@@ -1,10 +1,10 @@
 {
-  "name": "@louis383/tw-ebook-search-mcp",
+  "name": "@louis383/tw-book-search-mcp",
   "version": "0.1.0",
   "description": "MCP Server for searching and comparing ebook prices across TW bookstores",
   "type": "module",
   "bin": {
-    "tw-ebook-search-mcp": "dist/index.js"
+    "tw-book-search-mcp": "dist/index.js"
   },
   "publishConfig": {
     "access": "public"
