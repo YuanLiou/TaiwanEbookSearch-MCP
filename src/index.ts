@@ -3,6 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { transformSearchResponse, type SearchResponse } from "./utils.js";
 
 const DEFAULT_API_BASE_URL = "https://ebook.yuer.tw";
 const API_BASE_URL = process.env.API_BASE_URL || DEFAULT_API_BASE_URL;
@@ -95,45 +96,6 @@ async function fetchJson(
   } finally {
     clearTimeout(timeout);
   }
-}
-
-function truncateText(text: string | undefined, maxLength: number): string {
-  if (!text) return "";
-  const cleaned = text.replace(/\n/g, " ").trim();
-  if (cleaned.length <= maxLength) return cleaned;
-  return cleaned.slice(0, maxLength) + "…";
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function transformSearchResponse(data: any, maxPerBookstore: number): any {
-  return {
-    keywords: data.keywords,
-    totalQuantity: data.totalQuantity,
-    id: data.id,
-    results: (data.results ?? []).map((r: any) => {
-      const books = (r.books ?? []).slice(0, maxPerBookstore).map((b: any) => ({
-        title: b.title?.trim(),
-        price: b.price,
-        priceCurrency: b.priceCurrency,
-        link: b.link,
-        authors: b.authors,
-        publishDate: b.publishDate,
-        about: truncateText(b.about, ABOUT_MAX_LENGTH),
-      }));
-
-      const result: any = {
-        bookstore: r.bookstore?.displayName,
-        quantity: r.quantity,
-        books,
-      };
-
-      if (r.quantity > maxPerBookstore) {
-        result.booksShown = maxPerBookstore;
-      }
-
-      return result;
-    }),
-  };
 }
 
 // Tool: list_bookstores
@@ -233,7 +195,11 @@ server.registerTool(
 
       const maxPer =
         maxResultsPerBookstore ?? DEFAULT_MAX_RESULTS_PER_BOOKSTORE;
-      const transformed = transformSearchResponse(result.data, maxPer);
+      const transformed = transformSearchResponse(
+        result.data,
+        maxPer,
+        ABOUT_MAX_LENGTH,
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(transformed, null, 2) }],
       };
@@ -254,9 +220,17 @@ server.registerTool(
     description: "Retrieve a past search result by its ID",
     inputSchema: z.object({
       id: z.string().describe("The search result ID"),
+      maxResultsPerBookstore: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe(
+          `Max books to return per bookstore (default: ${DEFAULT_MAX_RESULTS_PER_BOOKSTORE}). Use a smaller value for faster responses with less detail.`,
+        ),
     }),
   },
-  async ({ id }) => {
+  async ({ id, maxResultsPerBookstore }) => {
     try {
       const result = await fetchJson(`searches/${encodeURIComponent(id)}`);
 
@@ -272,9 +246,12 @@ server.registerTool(
         };
       }
 
+      const maxPer =
+        maxResultsPerBookstore ?? DEFAULT_MAX_RESULTS_PER_BOOKSTORE;
       const transformed = transformSearchResponse(
         result.data,
-        DEFAULT_MAX_RESULTS_PER_BOOKSTORE,
+        maxPer,
+        ABOUT_MAX_LENGTH,
       );
       return {
         content: [{ type: "text", text: JSON.stringify(transformed, null, 2) }],
