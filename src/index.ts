@@ -5,10 +5,13 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 const API_BASE_URL = process.env.API_BASE_URL || "https://ebook.yuer.tw";
+const API_VERSION = "v1";
+const SERVER_VERSION = "0.1.0";
+const USER_AGENT = `TW-EBook-MCP-${SERVER_VERSION}`;
 
 const server = new McpServer({
   name: "taiwan-ebook-search",
-  version: "0.1.0",
+  version: SERVER_VERSION,
 });
 
 // Tool: list_bookstores
@@ -21,7 +24,12 @@ server.registerTool(
   },
   async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/bookstores`);
+      const response = await fetch(
+        `${API_BASE_URL}/${API_VERSION}/bookstores`,
+        {
+          headers: { "User-Agent": USER_AGENT },
+        },
+      );
 
       if (!response.ok) {
         return {
@@ -80,9 +88,10 @@ server.registerTool(
       }
 
       const response = await fetch(
-        `${API_BASE_URL}/searches?${params.toString()}`,
+        `${API_BASE_URL}/${API_VERSION}/searches?${params.toString()}`,
         {
           method: "POST",
+          headers: { "User-Agent": USER_AGENT },
         },
       );
 
@@ -124,7 +133,10 @@ server.registerTool(
   async ({ id }) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/searches/${encodeURIComponent(id)}`,
+        `${API_BASE_URL}/${API_VERSION}/searches/${encodeURIComponent(id)}`,
+        {
+          headers: { "User-Agent": USER_AGENT },
+        },
       );
 
       if (!response.ok) {
