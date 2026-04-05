@@ -1,10 +1,13 @@
 {
-  "name": "taiwan-ebook-search-mcp",
+  "name": "@louis383/tw-ebook-search-mcp",
   "version": "0.1.0",
-  "description": "MCP Server for searching and comparing ebook prices across Taiwan bookstores",
+  "description": "MCP Server for searching and comparing ebook prices across TW bookstores",
   "type": "module",
   "bin": {
-    "taiwan-ebook-search-mcp": "./dist/index.js"
+    "tw-ebook-search-mcp": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
@@ -27,7 +30,7 @@
   "author": "Jui Yuan Liu (Ray Yuan) <louis383@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YuanLiou/TaiwanEbookSearch-MCP"
+    "url": "git+https://github.com/YuanLiou/TaiwanEbookSearch-MCP.git"
   },
   "homepage": "https://github.com/YuanLiou/TaiwanEbookSearch-MCP#readme",
   "license": "MIT",
